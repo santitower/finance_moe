@@ -1,0 +1,53 @@
+{
+  "accounts": [
+    {
+      "type": "401k",
+      "balance": 120000,
+      "expense_ratio": 0.0005,
+      "holdings": [
+        {"ticker": "VTI", "shares": 200, "cost_basis": 220, "current_price": 265, "sector": "us_stock_index"},
+        {"ticker": "BND", "shares": 500, "cost_basis": 72, "current_price": 74, "sector": "bond_index"},
+        {"ticker": "VXUS", "shares": 300, "cost_basis": 55, "current_price": 60, "sector": "intl_stock_index"}
+      ]
+    },
+    {
+      "type": "Roth IRA",
+      "balance": 45000,
+      "expense_ratio": 0.0003,
+      "holdings": [
+        {"ticker": "VOO", "shares": 60, "cost_basis": 380, "current_price": 485, "sector": "us_stock_index"}
+      ]
+    },
+    {
+      "type": "taxable",
+      "balance": 30000,
+      "holdings": [
+        {"ticker": "AAPL", "shares": 50, "cost_basis": 140, "current_price": 195, "sector": "technology"},
+        {"ticker": "VTI", "shares": 30, "cost_basis": 210, "current_price": 265, "sector": "us_stock_index"}
+      ]
+    },
+    {
+      "type": "HSA",
+      "balance": 8000,
+      "expense_ratio": 0.0015,
+      "holdings": [
+        {"ticker": "VTI", "shares": 20, "cost_basis": 200, "current_price": 265, "sector": "us_stock_index"}
+      ]
+    }
+  ],
+  "income": {
+    "salary": 95000,
+    "other": 5000
+  },
+  "expenses": {
+    "fixed": 3200,
+    "variable": 1500
+  },
+  "tax": {
+    "filing_status": "married_joint",
+    "state": "CA",
+    "deductions_taken": "standard"
+  },
+  "risk_tolerance": 0.65,
+  "time_horizon_years": 25
+}

@@ -1,0 +1,65 @@
+You are a senior ML systems architect specializing in local LLM deployment. Critique the following two plans for a "Finance MoE" system — an expert-debate architecture for automated financial portfolio analysis.
+
+## System Constraints (non-negotiable)
+
+- **Hardware**: macOS MacBook Pro ARM64, 32GB unified RAM
+- **Model runner**: Single `llama-server` process on port 18434 with `--model-autoload --keep 0`
+- **Execution**: Sequential, not parallel. One model loaded into RAM at a time. Models unload after each call.
+- **Models involved**:
+  - SUFE-AIFLM-Lab_Fin-R1-Q4_K_M.gguf (~4.5 GB) — Risk
+  - Qwen3-14B-abliterated-Q4_K_M.gguf (~9.4 GB) — Compliance + Fee Auditor
+  - Qwen3.6-35B-A3B-Q4_K_M.gguf (~22.3 GB) — Allocator
+  - DeepSeek-R1-Distill-Qwen-14B-Q4_K_M.gguf (~8.5 GB) — Research
+  - Qwen3.8-27B-Q4_K_M.gguf (~16.5 GB) — Synthesizer
+- **Debate rules**: Always on. Unbounded rounds per conflict (no per-conflict limit). Hard cap of 60 total LLM calls system-wide. Debate transcripts must appear in final report output.
+- **Design principle**: LLMs do the reasoning. Python provides helper functions (math, JSON parsing). Python itself doesn't make decisions.
+
+## Files to Review
+
+Review both files thoroughly. The key files are located at:
+- `/Users/fsd/finance_moe/DEBATE_PLAN.md`
+- `/Users/fsd/finance_moe/BUILD_PLAN.md`
+
+## What to Critique
+
+Focus on these categories:
+
+### 1. Architecture correctness
+- Does `--model-autoload --keep 0` behave as described? (load on call, unload after response, debate rounds reuse resident models)
+- Are there any hidden RAM or concurrency issues?
+- Is the single-server design sound for the stated workflow?
+
+### 2. Debate protocol gaps
+- Are there missing steps, deadlocks, or edge cases the protocol doesn't handle?
+- Is the 60-call budget mathematically correct? (Phase 1: 5, Phase 2: 1, Phase 4: 1 = 7 reserved, 53 for debate at 2 calls/round)
+- Is the conflict detection logic realistic? Can it actually identify meaningful disagreements?
+- Does the debate prompt structure actually produce useful resolution, or just circular arguments?
+
+### 3. Build plan realism
+- Are the phase estimates reasonable?
+- Is there a logical dependency order that would break?
+- Are there missing components or over-specified ones?
+- Would the system actually run end-to-end as described?
+
+### 4. Edge cases & failure modes
+- What happens when an LLM call fails mid-debate?
+- What happens when JSON parsing fails?
+- What happens when 60 calls are exhausted before consensus?
+- What happens when context window is exceeded during debate?
+- What happens when a model doesn't respond in expected format?
+
+### 5. Missing pieces
+- What's absolutely necessary that isn't covered?
+- What assumptions are baked in that may be wrong?
+- Any security, reliability, or correctness concerns?
+
+## Output Format
+
+Provide your critique as:
+
+**CRITICAL BLOCKERS** (things that will break the system — must fix before building)
+**MODERATE ISSUES** (will cause problems in production — should fix before building)
+**SUGGESTED IMPROVEMENTS** (nice to have, can be added later)
+**CONFIDENCE SCORE** (0-10: how confident are you this will work end-to-end?)
+
+Be specific. Quote exact lines or sections. Suggest concrete fixes, not vague improvements.
